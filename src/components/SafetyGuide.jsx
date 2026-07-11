@@ -3,7 +3,7 @@
  * Uses proper ARIA tab pattern for keyboard navigation.
  */
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 
 /** Tab definitions for the safety guide sections */
 const SAFETY_TABS = [
@@ -14,11 +14,12 @@ const SAFETY_TABS = [
 
 /**
  * Tabbed safety guide showing before, during, and after storm advice.
- * @param {Object} props
- * @param {Object} props.safety - Safety data with before, during, after arrays.
- * @returns {JSX.Element|null} Returns null when safety data is missing.
+ * Memoized since it only re-renders when safety tips data changes.
+ * @param {Object} props - Component properties.
+ * @param {import('../types.js').SafetyGuideSections} props.safety - Safety data with before, during, after arrays.
+ * @returns {JSX.Element|null} The rendered safety guide, or null if safety data is missing.
  */
-export default function SafetyGuide({ safety }) {
+const SafetyGuide = memo(function SafetyGuide({ safety }) {
   const [activeTab, setActiveTab] = useState('before');
 
   if (!safety) return null;
@@ -71,4 +72,6 @@ export default function SafetyGuide({ safety }) {
       </div>
     </section>
   );
-}
+});
+
+export default SafetyGuide;

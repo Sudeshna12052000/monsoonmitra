@@ -4,7 +4,7 @@
 
 /**
  * Loading spinner overlay shown during API calls.
- * @returns {JSX.Element}
+ * @returns {JSX.Element} The rendered loading spinner interface.
  */
 export default function LoadingSpinner() {
   return (

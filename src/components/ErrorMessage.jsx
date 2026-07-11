@@ -7,10 +7,10 @@ import { memo } from 'react';
 /**
  * Displays a user-friendly error message with dismiss button.
  * Memoized to avoid re-renders when parent state changes unrelated to error.
- * @param {Object} props
+ * @param {Object} props - Component properties.
  * @param {string} props.message - Error message to display.
  * @param {Function} props.onDismiss - Callback to dismiss the error.
- * @returns {JSX.Element|null} Returns null when no error message.
+ * @returns {JSX.Element|null} The rendered error card, or null if no message.
  */
 const ErrorMessage = memo(function ErrorMessage({ message, onDismiss }) {
   if (!message) return null;

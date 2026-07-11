@@ -1,26 +1,24 @@
 /**
  * @fileoverview Main App component for MonsoonMitra.
  * Orchestrates the weather lookup, AI plan generation,
- * and renders the full dashboard.
+ * caching of weather results, and delegates rendering to a lazy-loaded Dashboard.
  */
 
-import { useState } from 'react';
+import { useState, useCallback, useRef, lazy, Suspense } from 'react';
 import Header from './components/Header.jsx';
 import InputForm from './components/InputForm.jsx';
-import AlertBanner from './components/AlertBanner.jsx';
-import PreparednessPanel from './components/PreparednessPanel.jsx';
-import Checklist from './components/Checklist.jsx';
-import TravelAdvisory from './components/TravelAdvisory.jsx';
-import SafetyGuide from './components/SafetyGuide.jsx';
 import LoadingSpinner from './components/LoadingSpinner.jsx';
 import ErrorMessage from './components/ErrorMessage.jsx';
 import { getWeatherData } from './services/weatherService.js';
 import { generateMonsoonPlan } from './services/aiService.js';
 import { LANGUAGES } from './config.js';
 
+// Lazy-load the results dashboard component to keep initial bundle small
+const Dashboard = lazy(() => import('./components/Dashboard.jsx'));
+
 /**
  * Root application component.
- * @returns {JSX.Element}
+ * @returns {JSX.Element} The rendered application component.
  */
 export default function App() {
   const [language, setLanguage] = useState('en');
@@ -28,24 +26,45 @@ export default function App() {
   const [error, setError] = useState('');
   const [results, setResults] = useState(null);
 
+  // Ref to cache the last weather result keyed by lowercased city name
+  const weatherCacheRef = useRef({});
+
   /**
-   * Handles form submission: fetches weather and generates AI plan.
-   * @param {Object} profile - Household profile from the form.
+   * Handles language changes from the header selector.
+   * Wrapped in useCallback to preserve reference identity for memoized Header.
+   * @type {Function}
    */
-  const handleSubmit = async (profile) => {
+  const handleLanguageChange = useCallback((lang) => {
+    setLanguage(lang);
+  }, []);
+
+  /**
+   * Handles form submission: checks cache or fetches weather, then generates AI plan.
+   * Wrapped in useCallback to preserve reference identity for memoized InputForm.
+   * @type {Function}
+   */
+  const handleSubmit = useCallback(async (profile) => {
     setIsLoading(true);
     setError('');
     setResults(null);
 
     try {
-      // Step 1: Geocode city + fetch weather
-      const weatherData = await getWeatherData(profile.city);
+      const cityKey = profile.city.trim().toLowerCase();
+      let weatherData;
 
-      // Step 2: Get language name for AI prompt
+      // Check the session weather cache first to prevent redundant API calls
+      if (weatherCacheRef.current[cityKey]) {
+        weatherData = weatherCacheRef.current[cityKey];
+      } else {
+        weatherData = await getWeatherData(profile.city);
+        weatherCacheRef.current[cityKey] = weatherData;
+      }
+
+      // Get full language name for AI prompt context
       const selectedLang = LANGUAGES.find((l) => l.code === language);
       const languageName = selectedLang ? selectedLang.name : 'English';
 
-      // Step 3: Generate AI plan using Gemini
+      // Generate the personalized plan using Gemini AI
       const aiPlan = await generateMonsoonPlan(
         weatherData.forecast,
         profile,
@@ -53,7 +72,6 @@ export default function App() {
         languageName
       );
 
-      // Step 4: Set results
       setResults({
         alert: weatherData.alert,
         location: weatherData.location,
@@ -68,11 +86,35 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [language]);
+
+  /**
+   * Toggles an item on the emergency checklist.
+   * Wrapped in useCallback to preserve reference identity for memoized Checklist.
+   * @type {Function}
+   */
+  const handleToggleChecklist = useCallback((index) => {
+    setResults((prev) => {
+      if (!prev) return prev;
+      const updatedChecklist = prev.checklist.map((item, i) =>
+        i === index ? { ...item, done: !item.done } : item
+      );
+      return { ...prev, checklist: updatedChecklist };
+    });
+  }, []);
+
+  /**
+   * Dismisses the active error card.
+   * Wrapped in useCallback to preserve reference identity for memoized ErrorMessage.
+   * @type {Function}
+   */
+  const handleDismissError = useCallback(() => {
+    setError('');
+  }, []);
 
   return (
     <div className="app">
-      <Header language={language} onLanguageChange={setLanguage} />
+      <Header language={language} onLanguageChange={handleLanguageChange} />
 
       <main className="main-content">
         <div className="container">
@@ -88,35 +130,19 @@ export default function App() {
           <InputForm onSubmit={handleSubmit} isLoading={isLoading} />
 
           {/* Error Message */}
-          <ErrorMessage message={error} onDismiss={() => setError('')} />
+          <ErrorMessage message={error} onDismiss={handleDismissError} />
 
           {/* Loading Spinner */}
           {isLoading && <LoadingSpinner />}
 
-          {/* Results Dashboard */}
+          {/* Results Dashboard - lazy loaded with Suspense boundary */}
           {results && (
-            <div className="dashboard" aria-live="polite" role="region" aria-label="Monsoon preparedness results">
-              {/* 1. Alert Banner */}
-              <AlertBanner
-                alert={results.alert}
-                locationName={`${results.location.name}, ${results.location.country}`}
+            <Suspense fallback={<LoadingSpinner />}>
+              <Dashboard
+                results={results}
+                onToggleChecklist={handleToggleChecklist}
               />
-
-              {/* 2. Preparedness Plan */}
-              <PreparednessPanel plan={results.plan} />
-
-              {/* 3. Emergency Checklist */}
-              <Checklist items={results.checklist} />
-
-              {/* 4. Travel Advisory */}
-              <TravelAdvisory
-                advisory={results.travelAdvisory}
-                forecast={results.forecast}
-              />
-
-              {/* 5. Safety Guide */}
-              <SafetyGuide safety={results.safety} />
-            </div>
+            </Suspense>
           )}
         </div>
       </main>

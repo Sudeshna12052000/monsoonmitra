@@ -8,9 +8,9 @@ import { memo } from 'react';
 /**
  * Displays personalized preparedness plan steps as a numbered list.
  * Memoized since it only re-renders when plan data changes.
- * @param {Object} props
+ * @param {Object} props - Component properties.
  * @param {string[]} props.plan - Array of preparedness steps.
- * @returns {JSX.Element|null} Returns null when plan is empty.
+ * @returns {JSX.Element|null} The rendered preparedness panel element, or null if the plan is empty.
  */
 const PreparednessPanel = memo(function PreparednessPanel({ plan }) {
   if (!plan || plan.length === 0) return null;

@@ -9,10 +9,10 @@ import { LANGUAGES } from '../config.js';
 /**
  * Header component with app title and language selector.
  * Memoized since it only depends on the selected language code.
- * @param {Object} props
+ * @param {Object} props - Component properties.
  * @param {string} props.language - Currently selected language code.
  * @param {Function} props.onLanguageChange - Callback when language changes.
- * @returns {JSX.Element}
+ * @returns {JSX.Element} The rendered header element.
  */
 const Header = memo(function Header({ language, onLanguageChange }) {
   return (

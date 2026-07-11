@@ -3,34 +3,24 @@
  * Items are adapted to the household profile by the AI.
  */
 
-import { useState } from 'react';
+import { memo, useMemo } from 'react';
 
 /**
  * Interactive emergency checklist with progress tracking.
- * @param {Object} props
- * @param {Array<{item: string, done: boolean}>} props.items - Checklist items.
- * @returns {JSX.Element}
+ * Memoized to prevent re-renders unless items or handler references change.
+ * @param {Object} props - Component properties.
+ * @param {import('../types.js').ChecklistItem[]} props.items - Checklist items.
+ * @param {Function} props.onToggle - Callback function triggered when toggling an item.
+ * @returns {JSX.Element|null} The rendered checklist panel, or null if items array is empty.
  */
-export default function Checklist({ items }) {
-  const [checklistState, setChecklistState] = useState(
-    items.map((item) => ({ ...item }))
-  );
-
-  /**
-   * Toggles a checklist item's done state.
-   * @param {number} index - Index of the item to toggle.
-   */
-  const toggleItem = (index) => {
-    setChecklistState((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, done: !item.done } : item
-      )
-    );
-  };
-
-  const completedCount = checklistState.filter((item) => item.done).length;
-  const totalCount = checklistState.length;
-  const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+const Checklist = memo(function Checklist({ items, onToggle }) {
+  // Use useMemo to compute derived checklist progress metrics
+  const { completedCount, totalCount, progressPercent } = useMemo(() => {
+    const total = items ? items.length : 0;
+    const completed = items ? items.filter((item) => item.done).length : 0;
+    const percent = total > 0 ? (completed / total) * 100 : 0;
+    return { completedCount: completed, totalCount: total, progressPercent: percent };
+  }, [items]);
 
   if (!items || items.length === 0) return null;
 
@@ -61,7 +51,7 @@ export default function Checklist({ items }) {
 
       {/* Checklist Items */}
       <ul className="checklist">
-        {checklistState.map((item, index) => (
+        {items.map((item, index) => (
           <li key={index} className={`checklist-item ${item.done ? 'checklist-done' : ''}`}>
             <label htmlFor={`checklist-item-${index}`} className="checklist-label">
               <input
@@ -69,7 +59,7 @@ export default function Checklist({ items }) {
                 type="checkbox"
                 className="checklist-checkbox"
                 checked={item.done}
-                onChange={() => toggleItem(index)}
+                onChange={() => onToggle(index)}
                 aria-label={`${item.item} - ${item.done ? 'completed' : 'not completed'}`}
               />
               <span className="checklist-custom-check" aria-hidden="true">
@@ -82,4 +72,6 @@ export default function Checklist({ items }) {
       </ul>
     </section>
   );
-}
+});
+
+export default Checklist;

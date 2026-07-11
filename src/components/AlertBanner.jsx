@@ -22,10 +22,13 @@ const ALERT_ICONS = {
 /**
  * Alert banner showing computed weather alert level with real mm figures.
  * Memoized since it only re-renders when alert data changes.
- * @param {Object} props
+ * @param {Object} props - Component properties.
  * @param {Object} props.alert - Alert data with level, message, totalMm.
+ * @param {string} props.alert.level - Severity level ('red', 'yellow', 'green').
+ * @param {string} props.alert.message - Computed alert message text.
+ * @param {number} props.alert.totalMm - Total aggregated precipitation over 48h.
  * @param {string} props.locationName - Display name of the city.
- * @returns {JSX.Element}
+ * @returns {JSX.Element} The rendered alert banner element.
  */
 const AlertBanner = memo(function AlertBanner({ alert, locationName }) {
   return (

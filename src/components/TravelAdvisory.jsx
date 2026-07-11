@@ -9,10 +9,10 @@ import { memo } from 'react';
  * Displays day-by-day travel advisory cards for next 5 days.
  * Each card shows real precipitation, probability, and wind speed.
  * Memoized since it only re-renders when advisory or forecast data changes.
- * @param {Object} props
- * @param {Array<{day: string, advice: string}>} props.advisory - Travel advisory data.
+ * @param {Object} props - Component properties.
+ * @param {import('../types.js').TravelAdvisoryDay[]} props.advisory - Travel advisory data.
  * @param {Object} props.forecast - Raw forecast data for precipitation figures.
- * @returns {JSX.Element|null} Returns null when advisory is empty.
+ * @returns {JSX.Element|null} The rendered travel advisory element, or null if the advisory is empty.
  */
 const TravelAdvisory = memo(function TravelAdvisory({ advisory, forecast }) {
   if (!advisory || advisory.length === 0) return null;
