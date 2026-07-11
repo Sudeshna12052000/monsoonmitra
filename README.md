@@ -43,32 +43,17 @@ src/
 
 ## Problem Statement Alignment
 
-| Requirement | Implementation |
+| Challenge Requirement | How MonsoonMitra Delivers It |
 |---|---|
-| Header with language selector | `Header.jsx` — title "MonsoonMitra 🌧️ — Be Monsoon Ready" + dropdown with 6 languages |
-| Input form (city, family, checkboxes) | `InputForm.jsx` — city text (max 100 chars), family size (1–20), 6 checkboxes (elderly, children, pets, two-wheeler, car, ground-floor) |
-| Alert banner from real forecast | `AlertBanner.jsx` + `computeAlertLevel()` — sums 48h precipitation; ≥64mm=red, ≥15mm=yellow, <15mm=green; shows real mm |
-| Personalized preparedness plan | `PreparednessPanel.jsx` — AI plan steps tailored to household profile |
-| Emergency checklist | `Checklist.jsx` — checkable items with progress bar, adapted per profile |
-| 5-day travel advisory | `TravelAdvisory.jsx` — day-by-day cards with real precipitation/wind data |
-| Safety guide (Before/During/After) | `SafetyGuide.jsx` — three tabs with ARIA tab pattern |
-| Geocode city → fetch weather | `weatherService.js` — Open-Meteo geocoding + forecast (free, no key) |
-| Send forecast + profile to Gemini | `aiService.js` — Gemini 3.5 Flash with system prompt enforcing JSON schema |
-| Strip ```json fences | `stripJsonFences()` in `aiService.js` — exported and unit tested |
-| Language changes ALL output | Language name sent to Gemini system prompt: "generate ENTIRELY in {language}" |
-| Empty city → inline error | `InputForm.jsx` — validates on submit, shows error, blocks API calls |
-| 15s AbortController timeout | Both `weatherService.js` and `aiService.js` use `REQUEST_TIMEOUT_MS` (15000ms) |
-| Button disabled while loading | `InputForm.jsx` — `disabled={isLoading}` on submit button |
-| Loading spinner | `LoadingSpinner.jsx` — animated rain cloud with status announcement |
-| Friendly error handling | `ErrorMessage.jsx` — dismissible error card with helpful messages |
-| API key via env only | `config.js` reads `import.meta.env.VITE_GEMINI_API_KEY`; `.env.local` in `.gitignore` |
-| No dangerouslySetInnerHTML | All AI output rendered as plain text via `{curly braces}` |
-| aria-labels on inputs | Every input, select, button has `aria-label`; results region has `aria-live="polite"` |
-| :focus-visible outlines | Global CSS `:focus-visible` rule with 2px accent outline |
-| 4.5:1 contrast ratio | Light text (#f1f5f9) on dark backgrounds (#0a0e1a) exceeds 4.5:1 |
-| JSDoc on all functions | Every exported and internal function has full JSDoc |
-| Clean file structure | `config.js`, `weatherService.js`, `aiService.js`, components split sensibly |
-| Tests | Vitest + RTL: 19 tests across 3 files — thresholds, validation, errors, a11y |
+| Personalized preparedness plans | AI plan tailored to family size, elderly, children, pets, vehicle type, and ground-floor homes |
+| Weather-aware guidance | Every recommendation is grounded on a live 5-day Open-Meteo forecast for the user's city |
+| Emergency checklists | Interactive, checkable emergency checklist with progress tracking, adapted to the household |
+| Travel advisories | Day-by-day 5-day travel advice using real precipitation and wind data |
+| Safety recommendations | Dedicated Before / During / After tabs — covering severe weather events end to end |
+| Multilingual assistance | Entire output generated in the user's chosen language: English, Hindi, Kannada, Tamil, Telugu, Bengali |
+| Real-time alerts | Alert banner computed client-side from live 48-hour precipitation (IMD-style: ≥64mm red, ≥15mm yellow) |
+| Helps individuals, families & communities | Household-profile-driven personalization for any Indian city |
+
 
 ## Setup
 
