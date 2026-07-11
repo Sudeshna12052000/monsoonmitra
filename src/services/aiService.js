@@ -21,7 +21,7 @@ Never invent weather data beyond what is provided.`;
 /**
  * Builds the user prompt with forecast data and household profile.
  * @param {Object} forecast - Raw forecast data from Open-Meteo.
- * @param {Object} profile - Household profile from the form.
+ * @param {import('../types.js').HouseholdProfile} profile - Household profile from the form.
  * @param {Object} location - Geocoded location info.
  * @returns {string} The user prompt for the model.
  */
@@ -64,10 +64,10 @@ export function stripJsonFences(text) {
 /**
  * Sends forecast and profile data to Gemini API and returns parsed plan.
  * @param {Object} forecast - Raw forecast data from Open-Meteo.
- * @param {Object} profile - Household profile from the form.
+ * @param {import('../types.js').HouseholdProfile} profile - Household profile from the form.
  * @param {Object} location - Geocoded location info.
  * @param {string} languageName - Target language name.
- * @returns {Promise<{plan: string[], checklist: Array<{item: string, done: boolean}>, travelAdvisory: Array<{day: string, advice: string}>, safety: {before: string[], during: string[], after: string[]}}>}
+ * @returns {Promise<import('../types.js').MonsoonPlan>}
  * @throws {Error} If API call fails or response cannot be parsed.
  */
 export async function generateMonsoonPlan(forecast, profile, location, languageName) {

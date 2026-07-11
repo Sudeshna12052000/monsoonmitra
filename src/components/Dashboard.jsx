@@ -12,10 +12,10 @@ import TravelAdvisory from './TravelAdvisory.jsx';
 import SafetyGuide from './SafetyGuide.jsx';
 
 /**
- * Dashboard component that aggregates all result sections.
+ * Aggregated Dashboard component for results presentation.
  * Memoized to prevent re-renders when parent states change.
  * @param {Object} props - Component properties.
- * @param {import('../types.js').MonsoonPlanResponse & { alert: Object, location: Object, forecast: Object }} props.results - Full results including AI plan and weather data.
+ * @param {import('../types.js').MonsoonPlan & { alert: import('../types.js').WeatherAlert, location: Object, forecast: Object }} props.results - Full results including AI plan and weather data.
  * @param {Function} props.onToggleChecklist - Callback to toggle checklist item completion.
  * @returns {JSX.Element} The rendered dashboard.
  */

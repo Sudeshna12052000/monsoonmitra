@@ -51,3 +51,17 @@ export const LANGUAGES = [
   { code: 'te', label: 'తెలుగు', name: 'Telugu' },
   { code: 'bn', label: 'বাংলা', name: 'Bengali' },
 ];
+
+/**
+ * List of household configuration fields for the UI form.
+ * @type {Array<{key: string, id: string, label: string}>}
+ */
+export const HOUSEHOLD_FIELDS = [
+  { key: 'hasElderly', id: 'elderly-checkbox', label: '👴 Elderly at home' },
+  { key: 'hasChildren', id: 'children-checkbox', label: '👶 Children' },
+  { key: 'hasPets', id: 'pets-checkbox', label: '🐾 Pets' },
+  { key: 'hasTwoWheeler', id: 'two-wheeler-checkbox', label: '🏍️ Two-wheeler' },
+  { key: 'hasCar', id: 'car-checkbox', label: '🚗 Car' },
+  { key: 'isGroundFloor', id: 'ground-floor-checkbox', label: '🏠 Ground-floor home' },
+];
+

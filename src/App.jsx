@@ -29,6 +29,9 @@ export default function App() {
   // Ref to cache the last weather result keyed by lowercased city name
   const weatherCacheRef = useRef({});
 
+  // Ref to cache the generated AI plans keyed by request parameters string
+  const planCacheRef = useRef({});
+
   /**
    * Handles language changes from the header selector.
    * Wrapped in useCallback to preserve reference identity for memoized Header.
@@ -39,7 +42,7 @@ export default function App() {
   }, []);
 
   /**
-   * Handles form submission: checks cache or fetches weather, then generates AI plan.
+   * Handles form submission: checks caches or fetches weather, then generates AI plan.
    * Wrapped in useCallback to preserve reference identity for memoized InputForm.
    * @type {Function}
    */
@@ -50,9 +53,32 @@ export default function App() {
 
     try {
       const cityKey = profile.city.trim().toLowerCase();
+      
+      // Build unique cache key matching exact submission inputs
+      const requestCacheKey = JSON.stringify({
+        city: cityKey,
+        profile: {
+          familySize: profile.familySize,
+          hasElderly: profile.hasElderly,
+          hasChildren: profile.hasChildren,
+          hasPets: profile.hasPets,
+          hasTwoWheeler: profile.hasTwoWheeler,
+          hasCar: profile.hasCar,
+          isGroundFloor: profile.isGroundFloor,
+        },
+        language,
+      });
+
+      // Level 2 Cache check: Reuse fully generated plan if identical inputs are submitted
+      if (planCacheRef.current[requestCacheKey]) {
+        setResults(planCacheRef.current[requestCacheKey]);
+        setIsLoading(false);
+        return;
+      }
+
       let weatherData;
 
-      // Check the session weather cache first to prevent redundant API calls
+      // Level 1 Cache check: Reuse weather results for the same city to bypass geocoding
       if (weatherCacheRef.current[cityKey]) {
         weatherData = weatherCacheRef.current[cityKey];
       } else {
@@ -72,7 +98,7 @@ export default function App() {
         languageName
       );
 
-      setResults({
+      const finalResults = {
         alert: weatherData.alert,
         location: weatherData.location,
         forecast: weatherData.forecast,
@@ -80,7 +106,11 @@ export default function App() {
         checklist: aiPlan.checklist,
         travelAdvisory: aiPlan.travelAdvisory,
         safety: aiPlan.safety,
-      });
+      };
+
+      // Populate plan cache
+      planCacheRef.current[requestCacheKey] = finalResults;
+      setResults(finalResults);
     } catch (err) {
       setError(err.message || 'An unexpected error occurred. Please try again.');
     } finally {

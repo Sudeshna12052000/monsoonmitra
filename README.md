@@ -58,7 +58,7 @@ src/
 MonsoonMitra is engineered for efficiency and speed:
 - **Memoized Components:** Prevents redundant renders by wrapping display-only components in `React.memo` and securing prop handlers via `useCallback`.
 - **Lazy-Loaded Dashboard:** Results components are split into a separate bundle using `React.lazy` + `Suspense`, lowering the initial load footprint.
-- **Session Weather Cache:** Caches weather responses in a session-level React `useRef` keyed by city name to bypass redundant API calls on regeneration or translation.
+- **Two-Level Caching:** Implements a two-level session cache in `App.jsx` using `useRef` to store weather forecast data (Level 1, keyed by city name) and generated plans (Level 2, keyed by full inputs stringified), bypassing redundant API and AI requests entirely.
 - **Preconnect Hints:** Initiates connection handshakes early using `rel="preconnect"` links to API endpoints, slashing round-trip time.
 - **Ultra-Lightweight Footprint:** Built production bundle is compact (~65KB gzipped), ensuring fast interactive load speeds.
 

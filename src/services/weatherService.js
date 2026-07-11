@@ -72,7 +72,7 @@ export async function fetchForecast(latitude, longitude, signal) {
  * Computes the alert level based on precipitation sum over next 48 hours.
  * Uses the first 2 days of forecast data.
  * @param {Object} forecastData - Raw forecast data from Open-Meteo.
- * @returns {{level: string, message: string, totalMm: number}}
+ * @returns {import('../types.js').WeatherAlert}
  */
 export function computeAlertLevel(forecastData) {
   const precipSums = forecastData.daily?.precipitation_sum || [];
@@ -104,7 +104,7 @@ export function computeAlertLevel(forecastData) {
 /**
  * Full weather pipeline: geocode city, fetch forecast, compute alert.
  * @param {string} city - City name to look up.
- * @returns {Promise<{location: Object, forecast: Object, alert: Object}>}
+ * @returns {Promise<{location: Object, forecast: Object, alert: import('../types.js').WeatherAlert}>}
  * @throws {Error} If any step fails or times out.
  */
 export async function getWeatherData(city) {

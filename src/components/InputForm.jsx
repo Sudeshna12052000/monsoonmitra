@@ -4,25 +4,33 @@
  * Validates city (required, max 100 chars) and family size (positive integer).
  */
 
-import { useState, memo } from 'react';
-import { CITY_MAX_LENGTH, FAMILY_SIZE_MIN, FAMILY_SIZE_MAX } from '../config.js';
+import { useState, useCallback } from 'react';
+import CheckboxItem from './CheckboxItem.jsx';
+import {
+  CITY_MAX_LENGTH,
+  FAMILY_SIZE_MIN,
+  FAMILY_SIZE_MAX,
+  HOUSEHOLD_FIELDS,
+} from '../config.js';
 
 /**
  * Input form for collecting household profile and city.
- * @param {Object} props
+ * @param {Object} props - Component properties.
  * @param {Function} props.onSubmit - Callback with profile data.
  * @param {boolean} props.isLoading - Whether form should be disabled.
- * @returns {JSX.Element}
+ * @returns {JSX.Element} The rendered form card.
  */
 export default function InputForm({ onSubmit, isLoading }) {
   const [city, setCity] = useState('');
   const [familySize, setFamilySize] = useState(2);
-  const [hasElderly, setHasElderly] = useState(false);
-  const [hasChildren, setHasChildren] = useState(false);
-  const [hasPets, setHasPets] = useState(false);
-  const [hasTwoWheeler, setHasTwoWheeler] = useState(false);
-  const [hasCar, setHasCar] = useState(false);
-  const [isGroundFloor, setIsGroundFloor] = useState(false);
+  const [profile, setProfile] = useState({
+    hasElderly: false,
+    hasChildren: false,
+    hasPets: false,
+    hasTwoWheeler: false,
+    hasCar: false,
+    isGroundFloor: false,
+  });
   const [cityError, setCityError] = useState('');
 
   /**
@@ -54,12 +62,7 @@ export default function InputForm({ onSubmit, isLoading }) {
     onSubmit({
       city: trimmedCity,
       familySize: clampedFamilySize,
-      hasElderly,
-      hasChildren,
-      hasPets,
-      hasTwoWheeler,
-      hasCar,
-      isGroundFloor,
+      ...profile,
     });
   };
 
@@ -87,6 +90,17 @@ export default function InputForm({ onSubmit, isLoading }) {
       setFamilySize(parsed);
     }
   };
+
+  /**
+   * Universal change handler for checkbox profile values.
+   * useCallback ensures stable reference identity.
+   */
+  const handleProfileChange = useCallback((key, value) => {
+    setProfile((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }, []);
 
   return (
     <form className="input-form" onSubmit={handleSubmit} noValidate>
@@ -144,48 +158,16 @@ export default function InputForm({ onSubmit, isLoading }) {
 
         {/* Checkboxes */}
         <div className="checkbox-grid">
-          <CheckboxItem
-            id="elderly-checkbox"
-            label="👴 Elderly at home"
-            checked={hasElderly}
-            onChange={setHasElderly}
-            disabled={isLoading}
-          />
-          <CheckboxItem
-            id="children-checkbox"
-            label="👶 Children"
-            checked={hasChildren}
-            onChange={setHasChildren}
-            disabled={isLoading}
-          />
-          <CheckboxItem
-            id="pets-checkbox"
-            label="🐾 Pets"
-            checked={hasPets}
-            onChange={setHasPets}
-            disabled={isLoading}
-          />
-          <CheckboxItem
-            id="two-wheeler-checkbox"
-            label="🏍️ Two-wheeler"
-            checked={hasTwoWheeler}
-            onChange={setHasTwoWheeler}
-            disabled={isLoading}
-          />
-          <CheckboxItem
-            id="car-checkbox"
-            label="🚗 Car"
-            checked={hasCar}
-            onChange={setHasCar}
-            disabled={isLoading}
-          />
-          <CheckboxItem
-            id="ground-floor-checkbox"
-            label="🏠 Ground-floor home"
-            checked={isGroundFloor}
-            onChange={setIsGroundFloor}
-            disabled={isLoading}
-          />
+          {HOUSEHOLD_FIELDS.map((field) => (
+            <CheckboxItem
+              key={field.key}
+              id={field.id}
+              label={field.label}
+              checked={profile[field.key]}
+              onChange={(value) => handleProfileChange(field.key, value)}
+              disabled={isLoading}
+            />
+          ))}
         </div>
 
         <button
@@ -209,34 +191,3 @@ export default function InputForm({ onSubmit, isLoading }) {
     </form>
   );
 }
-
-/**
- * Individual checkbox item component.
- * Memoized to prevent unnecessary re-renders when sibling checkboxes change.
- * @param {Object} props
- * @param {string} props.id - Unique checkbox ID.
- * @param {string} props.label - Checkbox label text.
- * @param {boolean} props.checked - Whether checked.
- * @param {Function} props.onChange - Change handler.
- * @param {boolean} props.disabled - Whether disabled.
- * @returns {JSX.Element}
- */
-const CheckboxItem = memo(function CheckboxItem({ id, label, checked, onChange, disabled }) {
-  return (
-    <label htmlFor={id} className={`checkbox-label ${checked ? 'checkbox-checked' : ''}`}>
-      <input
-        id={id}
-        type="checkbox"
-        className="checkbox-input"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        disabled={disabled}
-        aria-label={label}
-      />
-      <span className="checkbox-custom" aria-hidden="true">
-        {checked ? '✓' : ''}
-      </span>
-      <span className="checkbox-text">{label}</span>
-    </label>
-  );
-});

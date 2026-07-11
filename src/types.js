@@ -1,6 +1,6 @@
 /**
  * @fileoverview JSDoc type definitions for the MonsoonMitra application.
- * Defines the schema of the generated plan response from Gemini AI.
+ * Centralizes schemas for weather alerts, household profiles, and generated AI plans.
  */
 
 /**
@@ -23,7 +23,26 @@
  */
 
 /**
- * @typedef {Object} MonsoonPlanResponse
+ * @typedef {Object} HouseholdProfile
+ * @property {string} city - The name of the city.
+ * @property {number} familySize - Number of family members in the household.
+ * @property {boolean} hasElderly - Whether there are elderly family members.
+ * @property {boolean} hasChildren - Whether there are children.
+ * @property {boolean} hasPets - Whether there are pets.
+ * @property {boolean} hasTwoWheeler - Whether they own a two-wheeler.
+ * @property {boolean} hasCar - Whether they own a car.
+ * @property {boolean} isGroundFloor - Whether they live on the ground floor.
+ */
+
+/**
+ * @typedef {Object} WeatherAlert
+ * @property {string} level - Severity level ('red', 'yellow', 'green').
+ * @property {string} message - Computed alert message text.
+ * @property {number} totalMm - Total aggregated precipitation over 48h.
+ */
+
+/**
+ * @typedef {Object} MonsoonPlan
  * @property {string[]} plan - A general sequential list of personalized preparedness actions.
  * @property {ChecklistItem[]} checklist - A list of emergency checkable items.
  * @property {TravelAdvisoryDay[]} travelAdvisory - A day-by-day travel guide for the next 5 days.
