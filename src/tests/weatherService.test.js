@@ -62,6 +62,14 @@ describe('computeAlertLevel', () => {
     expect(result.totalMm).toBe(0);
   });
 
+  it('handles partial null precipitation values correctly', () => {
+    const result = computeAlertLevel(makeForecast([null, 30, 5]));
+    expect(result.level).toBe('yellow');
+    expect(result.totalMm).toBe(30);
+    expect(result.message).toContain('Moderate Rain');
+    expect(result.message).toContain('30.0');
+  });
+
   it('only sums first 2 days for 48h window', () => {
     // Day 3-5 have huge values that should be ignored
     const result = computeAlertLevel(makeForecast([3, 4, 100, 200, 300]));

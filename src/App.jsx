@@ -71,7 +71,7 @@ export default function App() {
 
       // Level 2 Cache check: Reuse fully generated plan if identical inputs are submitted
       if (planCacheRef.current[requestCacheKey]) {
-        setResults(planCacheRef.current[requestCacheKey]);
+        setResults(structuredClone(planCacheRef.current[requestCacheKey]));
         setIsLoading(false);
         return;
       }
@@ -109,7 +109,7 @@ export default function App() {
       };
 
       // Populate plan cache
-      planCacheRef.current[requestCacheKey] = finalResults;
+      planCacheRef.current[requestCacheKey] = structuredClone(finalResults);
       setResults(finalResults);
     } catch (err) {
       setError(err.message || 'An unexpected error occurred. Please try again.');
@@ -144,7 +144,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Header language={language} onLanguageChange={handleLanguageChange} />
+      <Header language={language} onLanguageChange={handleLanguageChange} disabled={isLoading} />
 
       <main className="main-content">
         <div className="container">

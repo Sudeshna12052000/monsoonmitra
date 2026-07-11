@@ -8,13 +8,14 @@ import { LANGUAGES } from '../config.js';
 
 /**
  * Header component with app title and language selector.
- * Memoized since it only depends on the selected language code.
+ * Memoized since it only depends on the selected language code and disabled state.
  * @param {Object} props - Component properties.
  * @param {string} props.language - Currently selected language code.
  * @param {Function} props.onLanguageChange - Callback when language changes.
+ * @param {boolean} [props.disabled] - Whether the language selector is disabled.
  * @returns {JSX.Element} The rendered header element.
  */
-const Header = memo(function Header({ language, onLanguageChange }) {
+const Header = memo(function Header({ language, onLanguageChange, disabled = false }) {
   return (
     <header className="app-header">
       <div className="header-content">
@@ -34,7 +35,9 @@ const Header = memo(function Header({ language, onLanguageChange }) {
             className="language-select"
             value={language}
             onChange={(e) => onLanguageChange(e.target.value)}
+            disabled={disabled}
             aria-label="Select language"
+            aria-disabled={disabled}
           >
             {LANGUAGES.map((lang) => (
               <option key={lang.code} value={lang.code}>

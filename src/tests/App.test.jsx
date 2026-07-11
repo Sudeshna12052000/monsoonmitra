@@ -119,6 +119,50 @@ describe('App — successful flow', () => {
   });
 });
 
+describe('App — caching and cache pollution prevention', () => {
+  it('prevents cache pollution by deep-copying cached plans', async () => {
+    getWeatherData.mockResolvedValue({
+      location: { name: 'Mumbai', country: 'India' },
+      forecast: { daily: { precipitation_sum: [10, 10] } },
+      alert: { level: 'yellow', message: 'Moderate rain', totalMm: 20 },
+    });
+    generateMonsoonPlan.mockResolvedValue({
+      plan: ['Avoid low areas'],
+      checklist: [{ item: 'Raincoat', done: false }],
+      travelAdvisory: [],
+      safety: { before: [], during: [], after: [] },
+    });
+
+    render(<App />);
+
+    const cityInput = screen.getByLabelText(/enter your city name/i);
+    const submitBtn = screen.getByRole('button', { name: /get my monsoon/i });
+
+    // Submit first time
+    fireEvent.change(cityInput, { target: { value: 'Mumbai' } });
+    fireEvent.click(submitBtn);
+
+    // Wait for checklist item to render and verify it is unchecked
+    const checkbox = await screen.findByLabelText(/raincoat - not completed/i);
+    expect(checkbox).not.toBeChecked();
+
+    // Toggle checklist item to completed
+    fireEvent.click(checkbox);
+    expect(checkbox).toBeChecked();
+
+    // Re-submit identical request to trigger cache hit
+    fireEvent.click(submitBtn);
+
+    // The regenerated checkbox must arrive unchecked again (no pollution of cache reference)
+    const freshCheckbox = await screen.findByLabelText(/raincoat - not completed/i);
+    expect(freshCheckbox).not.toBeChecked();
+    
+    // Services should have only been invoked once due to caching
+    expect(getWeatherData).toHaveBeenCalledTimes(1);
+    expect(generateMonsoonPlan).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('App — accessibility', () => {
   it('has aria-live region for results', async () => {
     getWeatherData.mockResolvedValue({
