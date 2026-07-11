@@ -1,7 +1,7 @@
 /**
  * @fileoverview Unit tests for aiService — stripJsonFences, validatePlan, and automatic API retries.
  */
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { stripJsonFences, validatePlan, generateMonsoonPlan } from '../services/aiService.js';
 
 describe('stripJsonFences', () => {
@@ -68,13 +68,8 @@ describe('validatePlan', () => {
 describe('generateMonsoonPlan - automatic retry', () => {
   const originalFetch = global.fetch;
 
-  beforeEach(() => {
-    vi.stubEnv('VITE_GEMINI_API_KEY', 'valid-key');
-  });
-
   afterEach(() => {
     global.fetch = originalFetch;
-    vi.unstubAllEnvs();
   });
 
   it('calls fetch twice and returns plan on second try if first try returns malformed JSON', async () => {
