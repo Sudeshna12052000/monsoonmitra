@@ -6,12 +6,7 @@
 
 import { useState, useCallback } from 'react';
 import CheckboxItem from './CheckboxItem.jsx';
-import {
-  CITY_MAX_LENGTH,
-  FAMILY_SIZE_MIN,
-  FAMILY_SIZE_MAX,
-  HOUSEHOLD_FIELDS,
-} from '../config.js';
+import { CITY_MAX_LENGTH, FAMILY_SIZE_MIN, FAMILY_SIZE_MAX, HOUSEHOLD_FIELDS } from '../config.js';
 
 /**
  * Input form for collecting household profile and city.
@@ -53,10 +48,7 @@ export default function InputForm({ onSubmit, isLoading }) {
       return;
     }
 
-    const clampedFamilySize = Math.max(
-      FAMILY_SIZE_MIN,
-      Math.min(FAMILY_SIZE_MAX, familySize)
-    );
+    const clampedFamilySize = Math.max(FAMILY_SIZE_MIN, Math.min(FAMILY_SIZE_MAX, familySize));
 
     setCityError('');
     onSubmit({

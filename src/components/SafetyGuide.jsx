@@ -29,7 +29,9 @@ const SafetyGuide = memo(function SafetyGuide({ safety }) {
   return (
     <section className="dashboard-card" aria-label="Safety Guide">
       <h3 className="card-title">
-        <span className="card-icon" aria-hidden="true">🛡️</span>
+        <span className="card-icon" aria-hidden="true">
+          🛡️
+        </span>
         Safety Guide
       </h3>
 
@@ -59,9 +61,11 @@ const SafetyGuide = memo(function SafetyGuide({ safety }) {
       >
         {activeData.length > 0 ? (
           <ul className="safety-list">
-            {activeData.map((tip, index) => (
-              <li key={index} className="safety-item">
-                <span className="safety-bullet" aria-hidden="true">●</span>
+            {activeData.map((tip) => (
+              <li key={tip} className="safety-item">
+                <span className="safety-bullet" aria-hidden="true">
+                  ●
+                </span>
                 <span>{tip}</span>
               </li>
             ))}

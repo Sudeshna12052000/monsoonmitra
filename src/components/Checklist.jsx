@@ -27,7 +27,9 @@ const Checklist = memo(function Checklist({ items, onToggle }) {
   return (
     <section className="dashboard-card" aria-label="Emergency Checklist">
       <h3 className="card-title">
-        <span className="card-icon" aria-hidden="true">✅</span>
+        <span className="card-icon" aria-hidden="true">
+          ✅
+        </span>
         Emergency Checklist
       </h3>
 
@@ -52,7 +54,7 @@ const Checklist = memo(function Checklist({ items, onToggle }) {
       {/* Checklist Items */}
       <ul className="checklist">
         {items.map((item, index) => (
-          <li key={index} className={`checklist-item ${item.done ? 'checklist-done' : ''}`}>
+          <li key={item.item} className={`checklist-item ${item.done ? 'checklist-done' : ''}`}>
             <label htmlFor={`checklist-item-${index}`} className="checklist-label">
               <input
                 id={`checklist-item-${index}`}

@@ -32,11 +32,7 @@ const ALERT_ICONS = {
  */
 const AlertBanner = memo(function AlertBanner({ alert, locationName }) {
   return (
-    <div
-      className={ALERT_CLASSES[alert.level]}
-      role="alert"
-      aria-live="assertive"
-    >
+    <div className={ALERT_CLASSES[alert.level]} role="alert" aria-live="assertive">
       <div className="alert-content">
         <span className="alert-icon" aria-hidden="true">
           {ALERT_ICONS[alert.level]}

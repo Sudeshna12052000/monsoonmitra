@@ -93,11 +93,18 @@ describe('App — successful flow', () => {
           wind_speed_10m_max: [25, 20, 15, 10, 8],
         },
       },
-      alert: { level: 'red', message: '⛔ Heavy Rain Alert — 70.0 mm expected in next 48 hours', totalMm: 70 },
+      alert: {
+        level: 'red',
+        message: '⛔ Heavy Rain Alert — 70.0 mm expected in next 48 hours',
+        totalMm: 70,
+      },
     });
     generateMonsoonPlan.mockResolvedValue({
       plan: ['Stock emergency supplies', 'Charge devices'],
-      checklist: [{ item: 'First aid kit', done: false }, { item: 'Flashlight', done: false }],
+      checklist: [
+        { item: 'First aid kit', done: false },
+        { item: 'Flashlight', done: false },
+      ],
       travelAdvisory: [{ day: 'Monday', advice: 'Avoid travel' }],
       safety: { before: ['Seal windows'], during: ['Stay indoors'], after: ['Check for damage'] },
     });
@@ -156,7 +163,7 @@ describe('App — caching and cache pollution prevention', () => {
     // The regenerated checkbox must arrive unchecked again (no pollution of cache reference)
     const freshCheckbox = await screen.findByLabelText(/raincoat - not completed/i);
     expect(freshCheckbox).not.toBeChecked();
-    
+
     // Services should have only been invoked once due to caching
     expect(getWeatherData).toHaveBeenCalledTimes(1);
     expect(generateMonsoonPlan).toHaveBeenCalledTimes(1);

@@ -159,7 +159,7 @@ async function executeApiCall(forecast, profile, location, languageName, concise
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
-        errorData?.error?.message || `Gemini API request failed (${response.status})`
+        errorData?.error?.message || `Gemini API request failed (${response.status})`,
       );
     }
 
@@ -190,7 +190,9 @@ async function executeApiCall(forecast, profile, location, languageName, concise
  */
 export async function generateMonsoonPlan(forecast, profile, location, languageName) {
   if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your_gemini_api_key_here') {
-    throw new Error('Gemini API key is not configured. Please set VITE_GEMINI_API_KEY in your .env.local file.');
+    throw new Error(
+      'Gemini API key is not configured. Please set VITE_GEMINI_API_KEY in your .env.local file.',
+    );
   }
 
   try {
@@ -198,10 +200,14 @@ export async function generateMonsoonPlan(forecast, profile, location, languageN
     return await executeApiCall(forecast, profile, location, languageName, false);
   } catch (error) {
     // If it is a request timeout or endpoint failure, do not retry and throw immediately
-    if (error.name === 'AbortError' || error.message.includes('timed out') || error.message.includes('API request failed')) {
+    if (
+      error.name === 'AbortError' ||
+      error.message.includes('timed out') ||
+      error.message.includes('API request failed')
+    ) {
       throw error;
     }
-    
+
     // Automatic retry (Attempt 2) with a conciseness nudge
     try {
       return await executeApiCall(forecast, profile, location, languageName, true);

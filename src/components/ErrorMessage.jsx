@@ -18,16 +18,14 @@ const ErrorMessage = memo(function ErrorMessage({ message, onDismiss }) {
   return (
     <div className="error-container" role="alert" aria-live="assertive">
       <div className="error-card">
-        <span className="error-icon" aria-hidden="true">😟</span>
+        <span className="error-icon" aria-hidden="true">
+          😟
+        </span>
         <div className="error-body">
           <h3 className="error-title">Oops! Something went wrong</h3>
           <p className="error-text">{message}</p>
         </div>
-        <button
-          className="error-dismiss"
-          onClick={onDismiss}
-          aria-label="Dismiss error message"
-        >
+        <button className="error-dismiss" onClick={onDismiss} aria-label="Dismiss error message">
           ✕
         </button>
       </div>

@@ -24,7 +24,9 @@ const TravelAdvisory = memo(function TravelAdvisory({ advisory, forecast }) {
   return (
     <section className="dashboard-card" aria-label="Travel Advisory">
       <h3 className="card-title">
-        <span className="card-icon" aria-hidden="true">🚗</span>
+        <span className="card-icon" aria-hidden="true">
+          🚗
+        </span>
         Travel Advisory
       </h3>
       <div className="travel-grid">
@@ -34,7 +36,7 @@ const TravelAdvisory = memo(function TravelAdvisory({ advisory, forecast }) {
           const wind = windSpeeds[index] ?? '—';
 
           return (
-            <div key={index} className="travel-card">
+            <div key={entry.day} className="travel-card">
               <div className="travel-day-header">
                 <span className="travel-day">{entry.day}</span>
                 <div className="travel-stats">

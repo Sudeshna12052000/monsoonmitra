@@ -7,14 +7,31 @@
     <meta name="description" content="MonsoonMitra — AI-powered monsoon preparedness assistant for Indian cities. Get personalized weather alerts, emergency checklists, and travel advisories based on real forecasts." />
     <meta name="theme-color" content="#0a0e1a" />
     
-    <!-- Preconnect hints for weather and AI API endpoints to speed up network requests -->
+    <!-- 
+      Preconnect and DNS-Prefetch Optimization Strategy:
+      - preconnect warms up the TCP/TLS connection for immediate usage.
+      - dns-prefetch acts as a fallback for older browsers to resolve names early.
+    -->
     <link rel="preconnect" href="https://geocoding-api.open-meteo.com" />
+    <link rel="dns-prefetch" href="https://geocoding-api.open-meteo.com" />
+
     <link rel="preconnect" href="https://api.open-meteo.com" />
+    <link rel="dns-prefetch" href="https://api.open-meteo.com" />
+
     <link rel="preconnect" href="https://generativelanguage.googleapis.com" />
+    <link rel="dns-prefetch" href="https://generativelanguage.googleapis.com" />
 
     <title>MonsoonMitra 🌧️ — Be Monsoon Ready</title>
   </head>
   <body>
+    <!-- 
+      Loading Strategy:
+      - Main React application is mounted inside the #root div.
+      - Entry script is loaded as a ES module (type="module") which executes deferred
+        automatically, allowing browser HTML parsing to complete uninterrupted.
+      - The Results Dashboard bundle chunk is dynamically lazy loaded during runtime
+        using React.lazy and code splitting.
+    -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -18,13 +18,17 @@ const PreparednessPanel = memo(function PreparednessPanel({ plan }) {
   return (
     <section className="dashboard-card" aria-label="My Preparedness Plan">
       <h3 className="card-title">
-        <span className="card-icon" aria-hidden="true">📋</span>
+        <span className="card-icon" aria-hidden="true">
+          📋
+        </span>
         My Preparedness Plan
       </h3>
       <ul className="plan-list">
         {plan.map((step, index) => (
-          <li key={index} className="plan-item">
-            <span className="plan-number" aria-hidden="true">{index + 1}</span>
+          <li key={step} className="plan-item">
+            <span className="plan-number" aria-hidden="true">
+              {index + 1}
+            </span>
             <span className="plan-text">{step}</span>
           </li>
         ))}

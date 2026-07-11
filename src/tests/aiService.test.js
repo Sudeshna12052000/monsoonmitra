@@ -79,7 +79,7 @@ describe('generateMonsoonPlan - automatic retry', () => {
 
   it('calls fetch twice and returns plan on second try if first try returns malformed JSON', async () => {
     let callCount = 0;
-    
+
     // Mock fetch to simulate dynamic responses for retry validation
     global.fetch = vi.fn().mockImplementation(async () => {
       callCount++;
@@ -96,18 +96,22 @@ describe('generateMonsoonPlan - automatic retry', () => {
         return {
           ok: true,
           json: async () => ({
-            candidates: [{
-              content: {
-                parts: [{
-                  text: JSON.stringify({
-                    plan: ['Retry worked'],
-                    checklist: [{ item: 'Flashlight', done: false }],
-                    travelAdvisory: [],
-                    safety: { before: [], during: [], after: [] },
-                  }),
-                }],
+            candidates: [
+              {
+                content: {
+                  parts: [
+                    {
+                      text: JSON.stringify({
+                        plan: ['Retry worked'],
+                        checklist: [{ item: 'Flashlight', done: false }],
+                        travelAdvisory: [],
+                        safety: { before: [], during: [], after: [] },
+                      }),
+                    },
+                  ],
+                },
               },
-            }],
+            ],
           }),
         };
       }

@@ -46,10 +46,15 @@ export default class ErrorBoundary extends Component {
       return (
         <div className="error-boundary-container" role="alert" aria-live="assertive">
           <div className="error-card">
-            <span className="error-icon" aria-hidden="true">😟</span>
+            <span className="error-icon" aria-hidden="true">
+              😟
+            </span>
             <div className="error-body">
               <h3 className="error-title">Something went wrong</h3>
-              <p className="error-text">An unexpected error has occurred. Please refresh the page to restart the application.</p>
+              <p className="error-text">
+                An unexpected error has occurred. Please refresh the page to restart the
+                application.
+              </p>
             </div>
             <button
               className="error-dismiss"

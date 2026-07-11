@@ -37,16 +37,10 @@ const Dashboard = memo(function Dashboard({ results, onToggleChecklist }) {
       <PreparednessPanel plan={results.plan} />
 
       {/* 3. Emergency Checklist */}
-      <Checklist
-        items={results.checklist}
-        onToggle={onToggleChecklist}
-      />
+      <Checklist items={results.checklist} onToggle={onToggleChecklist} />
 
       {/* 4. Travel Advisory */}
-      <TravelAdvisory
-        advisory={results.travelAdvisory}
-        forecast={results.forecast}
-      />
+      <TravelAdvisory advisory={results.travelAdvisory} forecast={results.forecast} />
 
       {/* 5. Safety Guide */}
       <SafetyGuide safety={results.safety} />

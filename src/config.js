@@ -10,7 +10,8 @@ export const GEOCODING_API_URL = 'https://geocoding-api.open-meteo.com/v1/search
 export const FORECAST_API_URL = 'https://api.open-meteo.com/v1/forecast';
 
 /** Gemini API base URL */
-export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent';
+export const GEMINI_API_URL =
+  'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent';
 
 /** Gemini API key from environment variable (never hardcode) */
 export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
@@ -35,7 +36,7 @@ export const FAMILY_SIZE_MAX = 20;
  * for determining alert severity.
  */
 export const ALERT_THRESHOLDS = {
-  RED: 64,    // >= 64mm = Heavy rain alert
+  RED: 64, // >= 64mm = Heavy rain alert
   YELLOW: 15, // >= 15mm = Moderate rain
 };
 
@@ -64,4 +65,3 @@ export const HOUSEHOLD_FIELDS = [
   { key: 'hasCar', id: 'car-checkbox', label: '🚗 Car' },
   { key: 'isGroundFloor', id: 'ground-floor-checkbox', label: '🏠 Ground-floor home' },
 ];
-

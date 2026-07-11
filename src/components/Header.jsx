@@ -20,7 +20,9 @@ const Header = memo(function Header({ language, onLanguageChange, disabled = fal
     <header className="app-header">
       <div className="header-content">
         <div className="header-brand">
-          <span className="header-icon" aria-hidden="true">🌧️</span>
+          <span className="header-icon" aria-hidden="true">
+            🌧️
+          </span>
           <div>
             <h1 className="header-title">MonsoonMitra</h1>
             <p className="header-subtitle">Be Monsoon Ready</p>
